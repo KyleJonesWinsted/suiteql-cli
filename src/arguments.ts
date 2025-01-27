@@ -6,9 +6,16 @@ export const argumentFlags = {
     queryFile: '-f'
 }
 
+export enum OutputType {
+    table,
+    csv,
+    json
+}
+
 export type Args = {
     account: string | undefined,
-    query: string
+    query: string,
+    outputType: OutputType
 }
 
 export function parseArguments(): Args {
@@ -23,10 +30,23 @@ export function parseArguments(): Args {
         return process.exit(1);
     }
     const query = queryString || readQueryFile(queryFilePath);
+    const outputType = getOutputType();
     return {
         account: parseArgument(argumentFlags.account),
         query,
+        outputType,
     }
+}
+
+function getOutputType(): OutputType {
+    let outputType = OutputType.table;
+    if (process.argv.includes('-csv')) {
+        outputType = OutputType.csv;
+    }
+    if (process.argv.includes('-json')) {
+        outputType = OutputType.json;
+    }
+    return outputType;
 }
 
 function readQueryFile(filePath: string | undefined): string {
