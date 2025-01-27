@@ -66,13 +66,17 @@ function parseArgument(flag: string): string | undefined {
 export const usageString = `
 Usage:
 
-    -a  Account number/name to run query against. 
-        If none is provided, or the token is expired, 
-        you will be prompted to login via the browser
+    -a      Account number/name to run query against. 
+            If none is provided, or the token is expired, 
+            you will be prompted to login via the browser
 
-    -s  Query string to run. A file can be used instead 
-        with "-f"
+    -s      Query string to run. A file can be used instead 
+            with "-f"
     
-    -f  File path containing a query to run. A string can be
-        used instead with "-s"
+    -f      File path containing a query to run. A string can be
+            used instead with "-s"
+
+    -csv    Outputs results as CSV. Default output is a table
+
+    -json   Outputs results as JSON. Default output is a table
 `;
