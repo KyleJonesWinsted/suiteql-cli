@@ -33,18 +33,17 @@ export async function fetchAuthCode(accountId: string = 'system'): Promise<AuthP
         entity: search.get('entity') ?? '',
         realm: search.get('company') ?? '',
         accountId: search.get('company')?.toLowerCase().replace('_', '-') ?? '',
-        grant: search.get('code') ?? '',
-        grantType: 'code',
+        code: search.get('code') ?? '',
         verifier,
     };
 }
 
-export async function fetchAccessToken(authParams: AuthParams): Promise<AuthTokens> {
+export async function fetchAccessToken(authParams: AuthParams): Promise<AuthInfo> {
     const baseUrl = new URL(`https://${authParams.accountId}.suitetalk.api.netsuite.com/services/rest/auth/oauth2/v1/token`);
     const params = new URLSearchParams({
-        [authParams.grantType === 'code' ? 'code' : 'refresh_token']: authParams.grant,
+        code: authParams.code,
         redirect_uri: `http://localhost:${PORT}`,
-        grant_type: authParams.grantType === 'code' ? 'authorization_code' : 'refresh_token',
+        grant_type: 'authorization_code',
         code_verifier: authParams.verifier,
         client_id: INTEGRATION_CLIENT_ID,
     });
@@ -69,16 +68,44 @@ export async function fetchAccessToken(authParams: AuthParams): Promise<AuthToke
     return {
         access: data.access_token,
         refresh: data.refresh_token,
-        expirationDate: dateAddSeconds(new Date(), +data.expires_in)
+        expirationDate: dateAddSeconds(new Date(), +data.expires_in),
+        accountId: authParams.accountId,
+        realm: authParams.realm,
     }
 }
 
-export async function refreshAccessToken(authParams: AuthParams, tokens: AuthTokens): Promise<AuthTokens> {
-    return await fetchAccessToken({
-        ...authParams,
-        grant: tokens.refresh,
-        grantType: 'refresh',
+export async function refreshAccessToken(authInfo: AuthInfo): Promise<AuthInfo> {
+    const baseUrl = new URL(`https://${authInfo.accountId}.suitetalk.api.netsuite.com/services/rest/auth/oauth2/v1/token`);
+    const params = new URLSearchParams({
+        refresh_token: authInfo.refresh,
+        grant_type: 'refresh_token',
+        client_id: INTEGRATION_CLIENT_ID,
     });
+    const body = params.toString();
+    const response = await fetch(baseUrl, {
+        method: 'POST',
+        headers: {
+            'Host': `${authInfo.accountId}.suitetalk.api.netsuite.com`,
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': body.length.toString(),
+        },
+        body,
+    });
+    if (!response.ok) {
+        console.log(await response.text());
+        throw new Error("Error refreshing token from NetSuite");
+    }
+    const data: TokenResponse = await response.json();
+    if ('error' in data) {
+        throw new Error("Error refreshing token from NetSuite: " + data.error);
+    }
+    return {
+        access: data.access_token,
+        refresh: data.refresh_token,
+        expirationDate: dateAddSeconds(new Date(), +data.expires_in),
+        accountId: authInfo.accountId,
+        realm: authInfo.realm,
+    }
 }
 
 function dateAddSeconds(date: Date, seconds: number): Date {
@@ -96,10 +123,12 @@ type TokenResponse = {
     error: string;
 }
 
-export type AuthTokens = {
+export type AuthInfo = {
     access: string;
     refresh: string;
-    expirationDate: Date
+    expirationDate: Date;
+    accountId: string;
+    realm: string;
 }
 
 
@@ -109,8 +138,7 @@ type AuthParams = {
     entity: string;
     realm: string;
     accountId: string;
-    grant: string;
-    grantType: 'code' | 'refresh'
+    code: string;
     verifier: string;
 }
 

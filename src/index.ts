@@ -11,7 +11,7 @@ import { fetchAccessToken, fetchAuthCode, refreshAccessToken } from "./auth";
     const accessToken = await fetchAccessToken(response);
     console.log(accessToken);
 
-    const refreshedToken = await refreshAccessToken(response, accessToken);
+    const refreshedToken = await refreshAccessToken(accessToken);
 
     console.log(refreshedToken);
     console.log(accessToken.refresh === refreshedToken.refresh);
