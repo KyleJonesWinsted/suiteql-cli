@@ -1,11 +1,14 @@
 #! env node
 
 import { parseArguments } from "./arguments";
+import { fetchAuthCode, fetchIntegrationToken } from "./auth";
 
 (async () => {
 
-    const args = parseArguments();
-    console.log(args);
+    const token = await fetchIntegrationToken();
+    const response = await fetchAuthCode(token);
+    console.log(response);
+
 
     /**
      * TODO:
@@ -21,4 +24,6 @@ import { parseArguments } from "./arguments";
      *      if fails, display error to user
      */
 
+
 })();
+
