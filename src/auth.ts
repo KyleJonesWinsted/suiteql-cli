@@ -12,7 +12,7 @@ export async function fetchAuthCode(accountId: string = 'system'): Promise<AuthP
         'response_type': 'code',
         'client_id': INTEGRATION_CLIENT_ID,
         'redirect_uri': `http://localhost:${PORT}`,
-        'scope': 'suite_analytics',
+        'scope': 'restlets rest_webservices suite_analytics',
         'state': crypto.randomUUID(),
         'code_challenge': challenge,
         'code_challenge_method': 'S256',

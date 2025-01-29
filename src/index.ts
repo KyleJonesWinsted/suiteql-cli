@@ -2,19 +2,20 @@
 
 import { parseArguments } from "./arguments";
 import { fetchAccessToken, fetchAuthCode, refreshAccessToken } from "./auth";
+import { runQuery } from "./query";
+import { getAccountInfo, storeAccountInfo } from "./storage";
 
 (async () => {
 
-    const response = await fetchAuthCode();
-    console.log(response);
+    let accessToken = await getAccountInfo();
+    if (!accessToken || accessToken.expirationDate < new Date()) {
+        const response = await fetchAuthCode();
+        accessToken = await fetchAccessToken(response);
+    }
+    await storeAccountInfo(accessToken);
 
-    const accessToken = await fetchAccessToken(response);
-    console.log(accessToken);
-
-    const refreshedToken = await refreshAccessToken(accessToken);
-
-    console.log(refreshedToken);
-    console.log(accessToken.refresh === refreshedToken.refresh);
+    const states = await runQuery(accessToken, "SELECT * FROM state");
+    console.table(states);
 
     /**
      * TODO:

@@ -67,8 +67,7 @@ export const usageString = `
 Usage:
 
     -a      Account number/name to run query against. 
-            If none is provided, or the token is expired, 
-            you will be prompted to login via the browser
+            If none is provided, the last used account will be used
 
     -s      Query string to run. A file can be used instead 
             with "-f"
