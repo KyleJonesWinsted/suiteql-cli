@@ -14,7 +14,7 @@ import { getAccountInfo, storeAccountInfo } from "./storage";
     }
     await storeAccountInfo(accessToken);
 
-    const states = await runQuery(accessToken, "SELECT * FROM state");
+    const states = await runQuery(accessToken, "SELECT TOP 5 * FROM state");
     console.table(states);
 
     /**

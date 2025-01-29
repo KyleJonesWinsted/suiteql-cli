@@ -17,5 +17,8 @@ export async function runQuery(authInfo: AuthInfo, query: string): Promise<Recor
         process.exit(1);
     }
     // TODO: handle multiple pages
-    return data.items;
+    return data.items.map((item: any) => {
+        delete item.links;
+        return item;
+    });
 }
