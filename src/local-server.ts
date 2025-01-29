@@ -16,7 +16,6 @@ export async function getStringFromServer(): Promise<string> {
             });
         });
         server.listen({ port: 4000, host: 'localhost' });
-        console.log('listening on port 4000');
     })
 }
 

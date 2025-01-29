@@ -7,14 +7,15 @@ import { getAccountInfo, storeAccountInfo } from "./storage";
 
 (async () => {
 
-    let accessToken = await getAccountInfo();
+    const args = parseArguments()
+    let accessToken = await getAccountInfo(args.account);
     if (!accessToken || accessToken.expirationDate < new Date()) {
         const response = await fetchAuthCode();
         accessToken = await fetchAccessToken(response);
     }
-    await storeAccountInfo(accessToken);
+    await storeAccountInfo(accessToken, args.account);
 
-    const states = await runQuery(accessToken, "SELECT TOP 5 * FROM state");
+    const states = await runQuery(accessToken, args.query);
     console.table(states);
 
     /**

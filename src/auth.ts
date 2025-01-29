@@ -18,6 +18,7 @@ export async function fetchAuthCode(accountId: string = 'system'): Promise<AuthP
         'code_challenge_method': 'S256',
     });
     baseUrl.search = params.toString();
+    console.error('Please continue to login in browser...');
     openUrl(baseUrl);
     const rawResponse = await getStringFromServer();
     const search = parseSearchFromResponse(rawResponse);
@@ -58,7 +59,6 @@ export async function fetchAccessToken(authParams: AuthParams): Promise<AuthInfo
         body,
     });
     if (!response.ok) {
-        console.log(await response.text());
         throw new Error("Error fetching access token from NetSuite");
     }
     const data: TokenResponse = await response.json();
@@ -92,7 +92,6 @@ export async function refreshAccessToken(authInfo: AuthInfo): Promise<AuthInfo> 
         body,
     });
     if (!response.ok) {
-        console.log(await response.text());
         throw new Error("Error refreshing token from NetSuite");
     }
     const data: TokenResponse = await response.json();
@@ -150,7 +149,6 @@ function parseSearchFromResponse(raw: string): URLSearchParams | undefined {
 }
 
 function openUrl(url: URL): void {
-    console.log(url);
     if (process.platform === 'win32') {
         const winSafeUrl = url.toString().replace(/&/g, '^&');
         exec(`start "${winSafeUrl}"`);
