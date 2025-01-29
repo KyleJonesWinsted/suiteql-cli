@@ -1,14 +1,20 @@
 #! env node
 
 import { parseArguments } from "./arguments";
-import { fetchAuthCode, fetchIntegrationToken } from "./auth";
+import { fetchAccessToken, fetchAuthCode, refreshAccessToken } from "./auth";
 
 (async () => {
 
-    const token = await fetchIntegrationToken();
-    const response = await fetchAuthCode(token);
+    const response = await fetchAuthCode();
     console.log(response);
 
+    const accessToken = await fetchAccessToken(response);
+    console.log(accessToken);
+
+    const refreshedToken = await refreshAccessToken(response, accessToken);
+
+    console.log(refreshedToken);
+    console.log(accessToken.refresh === refreshedToken.refresh);
 
     /**
      * TODO:
