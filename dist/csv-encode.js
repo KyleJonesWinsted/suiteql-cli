@@ -27,6 +27,6 @@ function encodeCsvComponent(s) {
     return '"' + s.replace(/"/g, '""') + '"';
 }
 function containsControlCharacters(s) {
-    const controlCharacters = [',', '"', '\n', '\r', '\l'];
+    const controlCharacters = [',', '"', '\n', '\r'];
     return s.split('').some((c) => controlCharacters.includes(c));
 }

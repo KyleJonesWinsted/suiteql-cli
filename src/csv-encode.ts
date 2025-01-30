@@ -30,6 +30,6 @@ function encodeCsvComponent(s: string): string {
 }
 
 function containsControlCharacters(s: string): boolean {
-    const controlCharacters = [',', '"', '\n', '\r', '\l'];
+    const controlCharacters = [',', '"', '\n', '\r'];
     return s.split('').some((c) => controlCharacters.includes(c));
 }
