@@ -69,7 +69,7 @@ export async function fetchAccessToken(authParams: AuthParams): Promise<AuthInfo
     return {
         access: data.access_token,
         refresh: data.refresh_token,
-        expirationDate: dateAddSeconds(new Date(), +data.expires_in).toString(),
+        expirationDate: dateAddSeconds(new Date(), +data.expires_in).toISOString(),
         accountId: authParams.accountId,
         realm: authParams.realm,
     }
@@ -102,7 +102,7 @@ export async function refreshAccessToken(authInfo: AuthInfo): Promise<AuthInfo> 
     return {
         access: data.access_token,
         refresh: data.refresh_token,
-        expirationDate: dateAddSeconds(new Date(), +data.expires_in).toString(),
+        expirationDate: dateAddSeconds(new Date(), +data.expires_in).toISOString(),
         accountId: authInfo.accountId,
         realm: authInfo.realm,
     }
