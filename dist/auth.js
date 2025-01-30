@@ -17,10 +17,11 @@ const child_process_1 = require("child_process");
 const local_server_1 = require("./local-server");
 const crypto_1 = __importDefault(require("crypto"));
 const INTEGRATION_CLIENT_ID = 'db01e9b87906c711f3887d195c26bf38d218c69ce305b7f5a352daa0beb1dccf';
-function fetchAuthCode() {
-    return __awaiter(this, arguments, void 0, function* (accountId = 'system') {
+function fetchAuthCode(accountId) {
+    return __awaiter(this, void 0, void 0, function* () {
         var _a, _b, _c, _d, _e, _f, _g;
-        const baseUrl = new URL(`https://${accountId}.netsuite.com/app/login/oauth2/authorize.nl`);
+        const subdomain = accountId ? accountId + '.app' : 'system';
+        const baseUrl = new URL(`https://${subdomain}.netsuite.com/app/login/oauth2/authorize.nl`);
         const verifier = crypto_1.default.randomUUID() + crypto_1.default.randomUUID();
         const challenge = crypto_1.default.createHash('sha256').update(verifier).digest('base64url');
         const params = new URLSearchParams({
@@ -85,7 +86,7 @@ function fetchAccessToken(authParams) {
         return {
             access: data.access_token,
             refresh: data.refresh_token,
-            expirationDate: dateAddSeconds(new Date(), +data.expires_in),
+            expirationDate: dateAddSeconds(new Date(), +data.expires_in).toString(),
             accountId: authParams.accountId,
             realm: authParams.realm,
         };
@@ -120,7 +121,7 @@ function refreshAccessToken(authInfo) {
         return {
             access: data.access_token,
             refresh: data.refresh_token,
-            expirationDate: dateAddSeconds(new Date(), +data.expires_in),
+            expirationDate: dateAddSeconds(new Date(), +data.expires_in).toString(),
             accountId: authInfo.accountId,
             realm: authInfo.realm,
         };

@@ -15,10 +15,10 @@ const auth_1 = require("./auth");
 const query_1 = require("./query");
 const storage_1 = require("./storage");
 (() => __awaiter(void 0, void 0, void 0, function* () {
-    const args = (0, arguments_1.parseArguments)();
+    const args = yield (0, arguments_1.parseArguments)();
     let accessToken = yield (0, storage_1.getAccountInfo)(args.account);
-    if (!accessToken || accessToken.expirationDate < new Date()) {
-        const response = yield (0, auth_1.fetchAuthCode)();
+    if (!accessToken || new Date(accessToken.expirationDate) < new Date()) {
+        const response = yield (0, auth_1.fetchAuthCode)(accessToken === null || accessToken === void 0 ? void 0 : accessToken.accountId);
         accessToken = yield (0, auth_1.fetchAccessToken)(response);
     }
     yield (0, storage_1.storeAccountInfo)(accessToken, args.account);

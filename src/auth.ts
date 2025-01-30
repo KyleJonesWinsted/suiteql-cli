@@ -4,8 +4,9 @@ import crypto from 'crypto';
 
 const INTEGRATION_CLIENT_ID = 'db01e9b87906c711f3887d195c26bf38d218c69ce305b7f5a352daa0beb1dccf';
 
-export async function fetchAuthCode(accountId: string = 'system'): Promise<AuthParams> {
-    const baseUrl = new URL(`https://${accountId}.netsuite.com/app/login/oauth2/authorize.nl`);
+export async function fetchAuthCode(accountId?: string): Promise<AuthParams> {
+    const subdomain = accountId ? accountId + '.app' : 'system';
+    const baseUrl = new URL(`https://${subdomain}.netsuite.com/app/login/oauth2/authorize.nl`);
     const verifier = crypto.randomUUID() + crypto.randomUUID();
     const challenge = crypto.createHash('sha256').update(verifier).digest('base64url');
     const params = new URLSearchParams({
@@ -68,7 +69,7 @@ export async function fetchAccessToken(authParams: AuthParams): Promise<AuthInfo
     return {
         access: data.access_token,
         refresh: data.refresh_token,
-        expirationDate: dateAddSeconds(new Date(), +data.expires_in),
+        expirationDate: dateAddSeconds(new Date(), +data.expires_in).toString(),
         accountId: authParams.accountId,
         realm: authParams.realm,
     }
@@ -101,7 +102,7 @@ export async function refreshAccessToken(authInfo: AuthInfo): Promise<AuthInfo> 
     return {
         access: data.access_token,
         refresh: data.refresh_token,
-        expirationDate: dateAddSeconds(new Date(), +data.expires_in),
+        expirationDate: dateAddSeconds(new Date(), +data.expires_in).toString(),
         accountId: authInfo.accountId,
         realm: authInfo.realm,
     }
@@ -125,7 +126,7 @@ type TokenResponse = {
 export type AuthInfo = {
     access: string;
     refresh: string;
-    expirationDate: Date;
+    expirationDate: string;
     accountId: string;
     realm: string;
 }

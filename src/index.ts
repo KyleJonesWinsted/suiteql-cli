@@ -7,10 +7,10 @@ import { getAccountInfo, storeAccountInfo } from "./storage";
 
 (async () => {
 
-    const args = parseArguments()
+    const args = await parseArguments()
     let accessToken = await getAccountInfo(args.account);
-    if (!accessToken || accessToken.expirationDate < new Date()) {
-        const response = await fetchAuthCode();
+    if (!accessToken || new Date(accessToken.expirationDate) < new Date()) {
+        const response = await fetchAuthCode(accessToken?.accountId);
         accessToken = await fetchAccessToken(response);
     }
     await storeAccountInfo(accessToken, args.account);

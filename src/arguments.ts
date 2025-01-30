@@ -18,16 +18,18 @@ export type Args = {
     outputType: OutputType
 }
 
-export function parseArguments(): Args {
-    if (process.argv.length < 3 || process.argv.includes('-help')) {
+export async function parseArguments(): Promise<Args> {
+    if (process.argv.includes('-help')) {
         console.log(usageString);
         return process.exit(0);
     }
     const queryFilePath = parseArgument(argumentFlags.queryFile);
     let queryString = parseArgument(argumentFlags.queryString);
     if (!queryFilePath && !queryString) {
-        console.log('Missing arguments: You must supply either a query string or query file.');
-        return process.exit(1);
+        for await (const chunk of process.stdin) {
+            queryString = chunk.toString();
+            break;
+        }
     }
     const query = queryString || readQueryFile(queryFilePath);
     const outputType = getOutputType();
