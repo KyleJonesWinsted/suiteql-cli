@@ -25,13 +25,14 @@ const storage_1 = require("./storage");
         catch (_a) {
             const response = yield (0, auth_1.fetchAuthCode)(accountInfo.accountId);
             accountInfo = yield (0, auth_1.fetchAccessToken)(response);
+            yield (0, storage_1.storeAccountInfo)(accountInfo, args.account);
         }
     }
     if (!accountInfo) {
         const response = yield (0, auth_1.fetchAuthCode)();
         accountInfo = yield (0, auth_1.fetchAccessToken)(response);
+        yield (0, storage_1.storeAccountInfo)(accountInfo, args.account);
     }
-    yield (0, storage_1.storeAccountInfo)(accountInfo, args.account);
     const results = yield (0, query_1.runQuery)(accountInfo, args.query);
     switch (args.outputType) {
         case arguments_1.OutputType.table:

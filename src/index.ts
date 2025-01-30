@@ -16,13 +16,14 @@ import { getAccountInfo, storeAccountInfo } from "./storage";
         } catch {
             const response = await fetchAuthCode(accountInfo.accountId);
             accountInfo = await fetchAccessToken(response);
+            await storeAccountInfo(accountInfo, args.account);
         }
     }
     if (!accountInfo) {
         const response = await fetchAuthCode();
         accountInfo = await fetchAccessToken(response);
+        await storeAccountInfo(accountInfo, args.account);
     }
-    await storeAccountInfo(accountInfo, args.account);
 
     const results = await runQuery(accountInfo, args.query);
 
