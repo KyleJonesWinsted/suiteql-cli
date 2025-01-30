@@ -27,7 +27,7 @@ const storage_1 = require("./storage");
         }
     }
     if (!accountInfo) {
-        const response = yield (0, auth_1.fetchAuthCode)(args.account);
+        const response = yield (0, auth_1.fetchAuthCode)();
         accountInfo = yield (0, auth_1.fetchAccessToken)(response);
     }
     yield (0, storage_1.storeAccountInfo)(accountInfo, args.account);

@@ -18,7 +18,7 @@ import { getAccountInfo, storeAccountInfo } from "./storage";
         }
     }
     if (!accountInfo) {
-        const response = await fetchAuthCode(args.account);
+        const response = await fetchAuthCode();
         accountInfo = await fetchAccessToken(response);
     }
     await storeAccountInfo(accountInfo, args.account);
