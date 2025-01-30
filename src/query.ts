@@ -1,6 +1,6 @@
 import { AuthInfo } from "./auth";
 
-export async function runQuery(authInfo: AuthInfo, query: string): Promise<Record<string, unknown>> {
+export async function runQuery(authInfo: AuthInfo, query: string): Promise<Array<Record<string, string>>> {
     const baseUrl = new URL(`https://${authInfo.accountId}.suitetalk.api.netsuite.com/services/rest/query/v1/suiteql`);
     const response = await fetch(baseUrl, {
         method: 'POST',

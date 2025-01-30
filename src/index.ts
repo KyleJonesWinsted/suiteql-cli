@@ -1,7 +1,8 @@
 #! env node
 
-import { parseArguments } from "./arguments";
+import { OutputType, parseArguments } from "./arguments";
 import { fetchAccessToken, fetchAuthCode, refreshAccessToken } from "./auth";
+import { encodeCsv } from "./csv-encode";
 import { runQuery } from "./query";
 import { getAccountInfo, storeAccountInfo } from "./storage";
 
@@ -23,23 +24,16 @@ import { getAccountInfo, storeAccountInfo } from "./storage";
     }
     await storeAccountInfo(accountInfo, args.account);
 
-    const states = await runQuery(accountInfo, args.query);
-    console.table(states);
+    const results = await runQuery(accountInfo, args.query);
 
-    /**
-     * TODO:
-     *  fetch token
-     *      if account provided, look in file for tokens
-     *      else start server on port, open browser for oauth2.0
-     *      receive code grant and exchange for tokens
-     *      if account name provided, store tokens in file
-     * 
-     *  attempt query with token
-     *      if fails, attempt token refresh
-     *      if fails, open browser for auth (unless already tried)
-     *      if fails, display error to user
-     */
-
+    switch (args.outputType) {
+        case OutputType.table:
+            return console.table(results);
+        case OutputType.csv:
+            return console.log(encodeCsv(results));
+        case OutputType.json:
+            return console.log(JSON.stringify(results));
+    }
 
 })();
 

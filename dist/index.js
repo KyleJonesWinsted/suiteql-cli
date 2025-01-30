@@ -12,6 +12,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const arguments_1 = require("./arguments");
 const auth_1 = require("./auth");
+const csv_encode_1 = require("./csv-encode");
 const query_1 = require("./query");
 const storage_1 = require("./storage");
 (() => __awaiter(void 0, void 0, void 0, function* () {
@@ -31,19 +32,13 @@ const storage_1 = require("./storage");
         accountInfo = yield (0, auth_1.fetchAccessToken)(response);
     }
     yield (0, storage_1.storeAccountInfo)(accountInfo, args.account);
-    const states = yield (0, query_1.runQuery)(accountInfo, args.query);
-    console.table(states);
-    /**
-     * TODO:
-     *  fetch token
-     *      if account provided, look in file for tokens
-     *      else start server on port, open browser for oauth2.0
-     *      receive code grant and exchange for tokens
-     *      if account name provided, store tokens in file
-     *
-     *  attempt query with token
-     *      if fails, attempt token refresh
-     *      if fails, open browser for auth (unless already tried)
-     *      if fails, display error to user
-     */
+    const results = yield (0, query_1.runQuery)(accountInfo, args.query);
+    switch (args.outputType) {
+        case arguments_1.OutputType.table:
+            return console.table(results);
+        case arguments_1.OutputType.csv:
+            return console.log((0, csv_encode_1.encodeCsv)(results));
+        case arguments_1.OutputType.json:
+            return console.log(JSON.stringify(results));
+    }
 }))();
