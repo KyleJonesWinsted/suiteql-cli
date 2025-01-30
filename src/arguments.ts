@@ -32,7 +32,6 @@ export async function parseArguments(): Promise<Args> {
     const queryFilePath = parseArgument(argumentFlags.queryFile);
     let queryString = parseArgument(argumentFlags.queryString);
     if (!queryFilePath && !queryString) {
-        console.error("Enter a query:");
         for await (const chunk of process.stdin) {
             queryString = chunk.toString();
             break;

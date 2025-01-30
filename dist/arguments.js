@@ -45,7 +45,6 @@ function parseArguments() {
         const queryFilePath = parseArgument(exports.argumentFlags.queryFile);
         let queryString = parseArgument(exports.argumentFlags.queryString);
         if (!queryFilePath && !queryString) {
-            console.error("Enter a query:");
             try {
                 for (var _d = true, _e = __asyncValues(process.stdin), _f; _f = yield _e.next(), _a = _f.done, !_a; _d = true) {
                     _c = _f.value;
