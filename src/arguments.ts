@@ -58,6 +58,7 @@ async function printAccounts(): Promise<void> {
         Account: info.realm,
         'Is Expired': new Date(info.expirationDate) < now,
     }));
+    data.sort((a, b) => a.Account.localeCompare(b.Account));
     console.table(data);
 }
 

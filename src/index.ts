@@ -8,14 +8,22 @@ import { getAccountInfo, storeAccountInfo } from "./storage";
 (async () => {
 
     const args = await parseArguments()
-    let accessToken = await getAccountInfo(args.account);
-    if (!accessToken || new Date(accessToken.expirationDate) < new Date()) {
-        const response = await fetchAuthCode(accessToken?.accountId);
-        accessToken = await fetchAccessToken(response);
+    let accountInfo = await getAccountInfo(args.account);
+    if (accountInfo && new Date(accountInfo?.expirationDate) < new Date()) {
+        try {
+            accountInfo = await refreshAccessToken(accountInfo);
+        } catch {
+            const response = await fetchAuthCode(accountInfo.accountId);
+            accountInfo = await fetchAccessToken(response);
+        }
     }
-    await storeAccountInfo(accessToken, args.account);
+    if (!accountInfo) {
+        const response = await fetchAuthCode(args.account);
+        accountInfo = await fetchAccessToken(response);
+    }
+    await storeAccountInfo(accountInfo, args.account);
 
-    const states = await runQuery(accessToken, args.query);
+    const states = await runQuery(accountInfo, args.query);
     console.table(states);
 
     /**

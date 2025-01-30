@@ -16,13 +16,22 @@ const query_1 = require("./query");
 const storage_1 = require("./storage");
 (() => __awaiter(void 0, void 0, void 0, function* () {
     const args = yield (0, arguments_1.parseArguments)();
-    let accessToken = yield (0, storage_1.getAccountInfo)(args.account);
-    if (!accessToken || new Date(accessToken.expirationDate) < new Date()) {
-        const response = yield (0, auth_1.fetchAuthCode)(accessToken === null || accessToken === void 0 ? void 0 : accessToken.accountId);
-        accessToken = yield (0, auth_1.fetchAccessToken)(response);
+    let accountInfo = yield (0, storage_1.getAccountInfo)(args.account);
+    if (accountInfo && new Date(accountInfo === null || accountInfo === void 0 ? void 0 : accountInfo.expirationDate) < new Date()) {
+        try {
+            accountInfo = yield (0, auth_1.refreshAccessToken)(accountInfo);
+        }
+        catch (_a) {
+            const response = yield (0, auth_1.fetchAuthCode)(accountInfo.accountId);
+            accountInfo = yield (0, auth_1.fetchAccessToken)(response);
+        }
     }
-    yield (0, storage_1.storeAccountInfo)(accessToken, args.account);
-    const states = yield (0, query_1.runQuery)(accessToken, args.query);
+    if (!accountInfo) {
+        const response = yield (0, auth_1.fetchAuthCode)(args.account);
+        accountInfo = yield (0, auth_1.fetchAccessToken)(response);
+    }
+    yield (0, storage_1.storeAccountInfo)(accountInfo, args.account);
+    const states = yield (0, query_1.runQuery)(accountInfo, args.query);
     console.table(states);
     /**
      * TODO:
