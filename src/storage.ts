@@ -23,7 +23,7 @@ export async function resetAllAccountInfo(): Promise<void> {
     await fs.writeFile(STORAGE_FILE_PATH, '{}');
 }
 
-async function getAllAccountInfo(): Promise<Record<string, AuthInfo>> {
+export async function getAllAccountInfo(): Promise<Record<string, AuthInfo>> {
     if (!existsSync(STORAGE_FILE_PATH)) {
         return {};
     }

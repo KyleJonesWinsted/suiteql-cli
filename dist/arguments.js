@@ -38,6 +38,10 @@ function parseArguments() {
             console.error('All account have been removed.');
             return process.exit(0);
         }
+        if (process.argv.includes('-list')) {
+            yield printAccounts();
+            return process.exit(0);
+        }
         if (process.argv.includes('-help')) {
             console.log(exports.usageString);
             return process.exit(0);
@@ -72,6 +76,18 @@ function parseArguments() {
     });
 }
 exports.parseArguments = parseArguments;
+function printAccounts() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const allAccounts = yield (0, storage_1.getAllAccountInfo)();
+        const now = new Date();
+        const data = Object.entries(allAccounts).map(([name, info]) => ({
+            Name: name,
+            Account: info.realm,
+            'Is Expired': new Date(info.expirationDate) < now,
+        }));
+        console.table(data);
+    });
+}
 function getOutputType() {
     let outputType = OutputType.table;
     if (process.argv.includes('-csv')) {
@@ -110,6 +126,8 @@ Usage:
     -csv    Outputs results as CSV. Default output is a table
 
     -json   Outputs results as JSON. Default output is a table
+
+    -list   Lists all accounts and their expiration status
 
     -reset  Removes all account authentication data.
 

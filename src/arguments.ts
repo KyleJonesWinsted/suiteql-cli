@@ -1,5 +1,5 @@
 import { readFileSync } from "fs";
-import { resetAllAccountInfo } from "./storage";
+import { getAllAccountInfo, resetAllAccountInfo } from "./storage";
 
 export const argumentFlags = {
     account: '-a',
@@ -25,6 +25,10 @@ export async function parseArguments(): Promise<Args> {
         console.error('All account have been removed.');
         return process.exit(0);
     }
+    if (process.argv.includes('-list')) {
+        await printAccounts();
+        return process.exit(0);
+    }
     if (process.argv.includes('-help')) {
         console.log(usageString);
         return process.exit(0);
@@ -44,6 +48,17 @@ export async function parseArguments(): Promise<Args> {
         query,
         outputType,
     }
+}
+
+async function printAccounts(): Promise<void> {
+    const allAccounts = await getAllAccountInfo();
+    const now = new Date();
+    const data = Object.entries(allAccounts).map(([name, info]) => ({
+        Name: name,
+        Account: info.realm,
+        'Is Expired': new Date(info.expirationDate) < now,
+    }));
+    console.table(data);
 }
 
 function getOutputType(): OutputType {
@@ -86,6 +101,8 @@ Usage:
     -csv    Outputs results as CSV. Default output is a table
 
     -json   Outputs results as JSON. Default output is a table
+
+    -list   Lists all accounts and their expiration status
 
     -reset  Removes all account authentication data.
 
