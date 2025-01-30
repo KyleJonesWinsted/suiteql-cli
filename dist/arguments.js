@@ -18,6 +18,7 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.usageString = exports.parseArguments = exports.OutputType = exports.argumentFlags = void 0;
 const fs_1 = require("fs");
+const storage_1 = require("./storage");
 exports.argumentFlags = {
     account: '-a',
     queryString: '-s',
@@ -32,6 +33,11 @@ var OutputType;
 function parseArguments() {
     return __awaiter(this, void 0, void 0, function* () {
         var _a, e_1, _b, _c;
+        if (process.argv.includes('-reset')) {
+            yield (0, storage_1.resetAllAccountInfo)();
+            console.error('All account have been removed.');
+            return process.exit(0);
+        }
         if (process.argv.includes('-help')) {
             console.log(exports.usageString);
             return process.exit(0);
@@ -39,6 +45,7 @@ function parseArguments() {
         const queryFilePath = parseArgument(exports.argumentFlags.queryFile);
         let queryString = parseArgument(exports.argumentFlags.queryString);
         if (!queryFilePath && !queryString) {
+            console.error("Enter a query:");
             try {
                 for (var _d = true, _e = __asyncValues(process.stdin), _f; _f = yield _e.next(), _a = _f.done, !_a; _d = true) {
                     _c = _f.value;
@@ -104,4 +111,7 @@ Usage:
     -csv    Outputs results as CSV. Default output is a table
 
     -json   Outputs results as JSON. Default output is a table
+
+    -reset  Removes all account authentication data.
+
 `;

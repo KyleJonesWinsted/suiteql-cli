@@ -1,4 +1,5 @@
 import { readFileSync } from "fs";
+import { resetAllAccountInfo } from "./storage";
 
 export const argumentFlags = {
     account: '-a',
@@ -19,6 +20,11 @@ export type Args = {
 }
 
 export async function parseArguments(): Promise<Args> {
+    if (process.argv.includes('-reset')) {
+        await resetAllAccountInfo();
+        console.error('All account have been removed.');
+        return process.exit(0);
+    }
     if (process.argv.includes('-help')) {
         console.log(usageString);
         return process.exit(0);
@@ -26,6 +32,7 @@ export async function parseArguments(): Promise<Args> {
     const queryFilePath = parseArgument(argumentFlags.queryFile);
     let queryString = parseArgument(argumentFlags.queryString);
     if (!queryFilePath && !queryString) {
+        console.error("Enter a query:");
         for await (const chunk of process.stdin) {
             queryString = chunk.toString();
             break;
@@ -80,4 +87,7 @@ Usage:
     -csv    Outputs results as CSV. Default output is a table
 
     -json   Outputs results as JSON. Default output is a table
+
+    -reset  Removes all account authentication data.
+
 `;

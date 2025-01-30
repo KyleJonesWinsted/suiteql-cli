@@ -18,6 +18,11 @@ export async function storeAccountInfo(authInfo: AuthInfo, accountName?: string)
     await fs.writeFile(STORAGE_FILE_PATH, JSON.stringify(info));
 }
 
+export async function resetAllAccountInfo(): Promise<void> {
+    await fs.rm(STORAGE_FILE_PATH);
+    await fs.writeFile(STORAGE_FILE_PATH, '{}');
+}
+
 async function getAllAccountInfo(): Promise<Record<string, AuthInfo>> {
     if (!existsSync(STORAGE_FILE_PATH)) {
         return {};
