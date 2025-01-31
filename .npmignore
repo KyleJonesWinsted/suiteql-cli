@@ -1,0 +1,4 @@
+dist/creds.json
+src
+tsconfig.json
+.gitignore
