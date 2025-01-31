@@ -115,7 +115,9 @@ function parseArgument(flag) {
 exports.usageString = `
 Usage:
 
-    -a      Account number/name to run query against. 
+    -help   View a full list of arguments
+
+    -a      Account nickname to run query against. 
             If none is provided, the last used account will be used
 
     -s      Query string to run. A file can be used instead 
