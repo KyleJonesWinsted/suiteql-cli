@@ -18,22 +18,30 @@ const storage_1 = require("./storage");
 (() => __awaiter(void 0, void 0, void 0, function* () {
     const args = yield (0, arguments_1.parseArguments)();
     let accountInfo = yield (0, storage_1.getAccountInfo)(args.account);
+    let isNewToken = false;
+    let deferredStorage = undefined;
     if (accountInfo && new Date(accountInfo === null || accountInfo === void 0 ? void 0 : accountInfo.expirationDate) < new Date()) {
+        isNewToken = true;
         try {
             accountInfo = yield (0, auth_1.refreshAccessToken)(accountInfo);
         }
         catch (_a) {
             const response = yield (0, auth_1.fetchAuthCode)(accountInfo.accountId);
             accountInfo = yield (0, auth_1.fetchAccessToken)(response);
-            yield (0, storage_1.storeAccountInfo)(accountInfo, args.account);
+            deferredStorage = (0, storage_1.storeAccountInfo)(accountInfo, args.account);
         }
     }
     if (!accountInfo) {
+        isNewToken = true;
         const response = yield (0, auth_1.fetchAuthCode)();
         accountInfo = yield (0, auth_1.fetchAccessToken)(response);
-        yield (0, storage_1.storeAccountInfo)(accountInfo, args.account);
+        deferredStorage = (0, storage_1.storeAccountInfo)(accountInfo, args.account);
+    }
+    if (!isNewToken) {
+        deferredStorage = (0, storage_1.updateLastUsed)(accountInfo);
     }
     const results = yield (0, query_1.runQuery)(accountInfo, args.query);
+    yield deferredStorage;
     switch (args.outputType) {
         case arguments_1.OutputType.table:
             return console.table(results);

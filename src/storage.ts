@@ -18,6 +18,12 @@ export async function storeAccountInfo(authInfo: AuthInfo, accountName?: string)
     await fs.writeFile(STORAGE_FILE_PATH, JSON.stringify(info));
 }
 
+export async function updateLastUsed(authInfo: AuthInfo): Promise<void> {
+    const info = await getAllAccountInfo();
+    info[LAST_USED_ACCOUNT_NAME] = authInfo;
+    await fs.writeFile(STORAGE_FILE_PATH, JSON.stringify(info));
+}
+
 export async function resetAllAccountInfo(): Promise<void> {
     await fs.rm(STORAGE_FILE_PATH);
     await fs.writeFile(STORAGE_FILE_PATH, '{}');
