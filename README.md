@@ -62,7 +62,7 @@ suiteql -s "SELECT * FROM items" -csv > output.csv
 | -help  | View a full list of arguments                                                                  |
 | -a     | Account nickname to run query against. If none is provided, the last used account will be used |
 | -s     | Query string to run. A file can be used instead with "-f"                                      |
-| -f     | File path containing a query to run. A string can beused instead with "-s"                     |
+| -f     | File path containing a query to run. A string can be used instead with "-s"                    |
 | -csv   | Outputs results as CSV. Default output is a table                                              |
 | -json  | Outputs results as JSON. Default output is a table                                             |
 | -list  | Lists all accounts and their expiration status                                                 |
