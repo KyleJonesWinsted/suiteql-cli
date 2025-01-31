@@ -14,5 +14,8 @@
   "files": [
     "dist",
     "README.md"
-  ]
+  ],
+  "engines": {
+    "node": ">=21.7.3"
+  }
 }
