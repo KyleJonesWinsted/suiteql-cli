@@ -22,7 +22,7 @@ function runQuery(authInfo, query) {
                 return item;
             }));
             hasMore = data.hasMore;
-            offset += 1000;
+            offset += data.count;
         }
         return output;
     });

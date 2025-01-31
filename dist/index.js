@@ -38,7 +38,7 @@ const storage_1 = require("./storage");
         case arguments_1.OutputType.table:
             return console.table(results);
         case arguments_1.OutputType.csv:
-            return console.log((0, csv_encode_1.encodeCsv)(results));
+            return process.stdout.write((0, csv_encode_1.encodeCsv)(results));
         case arguments_1.OutputType.json:
             return console.log(JSON.stringify(results));
     }

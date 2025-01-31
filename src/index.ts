@@ -31,7 +31,7 @@ import { getAccountInfo, storeAccountInfo } from "./storage";
         case OutputType.table:
             return console.table(results);
         case OutputType.csv:
-            return console.log(encodeCsv(results));
+            return process.stdout.write(encodeCsv(results));
         case OutputType.json:
             return console.log(JSON.stringify(results));
     }

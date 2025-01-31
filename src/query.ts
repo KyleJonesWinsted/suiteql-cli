@@ -11,7 +11,7 @@ export async function runQuery(authInfo: AuthInfo, query: string): Promise<Array
             return item;
         }));
         hasMore = data.hasMore;
-        offset += 1000;
+        offset += data.count;
     }
     return output;
 }
