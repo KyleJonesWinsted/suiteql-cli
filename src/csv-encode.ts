@@ -5,9 +5,9 @@ type Input = Array<Record<string, string>>;
 export function encodeCsv(input: Input): string {
     const headers = parseHeaders(input);
     let out = '';
-    out += headers.map((h) => encodeCsvComponent(h)).join(',') + '\n';
+    out += headers.map((h) => encodeCsvComponent(h)).join(',') + '\r\n';
     for (const row of input) {
-        out += headers.map((h) => encodeCsvComponent(row[h] ?? '')) + '\n';
+        out += headers.map((h) => encodeCsvComponent(row[h] ?? '')) + '\r\n';
     }
     return out;
 }

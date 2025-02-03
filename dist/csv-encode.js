@@ -4,9 +4,9 @@ exports.encodeCsv = void 0;
 function encodeCsv(input) {
     const headers = parseHeaders(input);
     let out = '';
-    out += headers.map((h) => encodeCsvComponent(h)).join(',') + '\n';
+    out += headers.map((h) => encodeCsvComponent(h)).join(',') + '\r\n';
     for (const row of input) {
-        out += headers.map((h) => { var _a; return encodeCsvComponent((_a = row[h]) !== null && _a !== void 0 ? _a : ''); }) + '\n';
+        out += headers.map((h) => { var _a; return encodeCsvComponent((_a = row[h]) !== null && _a !== void 0 ? _a : ''); }) + '\r\n';
     }
     return out;
 }

@@ -16,6 +16,7 @@ import { getAccountInfo, storeAccountInfo, updateLastUsed } from "./storage";
         isNewToken = true;
         try {
             accountInfo = await refreshAccessToken(accountInfo);
+            // TODO: handle updating stored account after refresh without knowing account name
         } catch {
             const response = await fetchAuthCode(accountInfo.accountId);
             accountInfo = await fetchAccessToken(response);
