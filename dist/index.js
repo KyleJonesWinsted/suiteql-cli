@@ -24,13 +24,12 @@ const storage_1 = require("./storage");
         isNewToken = true;
         try {
             accountInfo = yield (0, auth_1.refreshAccessToken)(accountInfo);
-            // TODO: handle updating stored account after refresh without knowing account name
         }
         catch (_a) {
             const response = yield (0, auth_1.fetchAuthCode)(accountInfo.accountId);
             accountInfo = yield (0, auth_1.fetchAccessToken)(response);
-            deferredStorage = (0, storage_1.storeAccountInfo)(accountInfo, args.account);
         }
+        deferredStorage = (0, storage_1.storeAccountInfo)(accountInfo, args.account);
     }
     if (!accountInfo) {
         isNewToken = true;

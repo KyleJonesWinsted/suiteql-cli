@@ -13,7 +13,17 @@ export async function getAccountInfo(accountName: string = LAST_USED_ACCOUNT_NAM
 
 export async function storeAccountInfo(authInfo: AuthInfo, accountName?: string): Promise<void> {
     const info = await getAllAccountInfo();
-    info[accountName ?? authInfo.realm] = authInfo;
+    if (!accountName) {
+        const matchingRealms = Object.entries(info).filter(([_, value]) => value.realm === authInfo.realm);
+        if (matchingRealms.length < 1) {
+            info[authInfo.realm] = authInfo;
+        }
+        matchingRealms.forEach(([key, _]) => {
+            info[key] = authInfo;
+        });
+    } else {
+        info[accountName] = authInfo;
+    }
     info[LAST_USED_ACCOUNT_NAME] = authInfo;
     await fs.writeFile(STORAGE_FILE_PATH, JSON.stringify(info));
 }

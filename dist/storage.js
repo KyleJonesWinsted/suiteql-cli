@@ -51,7 +51,18 @@ exports.getAccountInfo = getAccountInfo;
 function storeAccountInfo(authInfo, accountName) {
     return __awaiter(this, void 0, void 0, function* () {
         const info = yield getAllAccountInfo();
-        info[accountName !== null && accountName !== void 0 ? accountName : authInfo.realm] = authInfo;
+        if (!accountName) {
+            const matchingRealms = Object.entries(info).filter(([_, value]) => value.realm === authInfo.realm);
+            if (matchingRealms.length < 1) {
+                info[authInfo.realm] = authInfo;
+            }
+            matchingRealms.forEach(([key, _]) => {
+                info[key] = authInfo;
+            });
+        }
+        else {
+            info[accountName] = authInfo;
+        }
         info[LAST_USED_ACCOUNT_NAME] = authInfo;
         yield fs.writeFile(STORAGE_FILE_PATH, JSON.stringify(info));
     });
