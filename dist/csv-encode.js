@@ -18,7 +18,7 @@ function parseHeaders(input) {
             out.add(key);
         }
     }
-    return Array.from(out.keys());
+    return Array.from(out.keys()).sort();
 }
 function encodeCsvComponent(s) {
     if (!containsControlCharacters(s)) {
