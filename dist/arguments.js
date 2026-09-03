@@ -16,7 +16,8 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
     function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.usageString = exports.parseArguments = exports.OutputType = exports.argumentFlags = void 0;
+exports.usageString = exports.OutputType = exports.argumentFlags = void 0;
+exports.parseArguments = parseArguments;
 const fs_1 = require("fs");
 const storage_1 = require("./storage");
 exports.argumentFlags = {
@@ -75,7 +76,6 @@ function parseArguments() {
         };
     });
 }
-exports.parseArguments = parseArguments;
 function printAccounts() {
     return __awaiter(this, void 0, void 0, function* () {
         const allAccounts = yield (0, storage_1.getAllAccountInfo)();

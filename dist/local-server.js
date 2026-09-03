@@ -9,7 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStringFromServer = exports.PORT = void 0;
+exports.PORT = void 0;
+exports.getStringFromServer = getStringFromServer;
 const http_1 = require("http");
 exports.PORT = 4000;
 function getStringFromServer() {
@@ -30,7 +31,6 @@ function getStringFromServer() {
         });
     });
 }
-exports.getStringFromServer = getStringFromServer;
 function createResponseString(message) {
     return `
 HTTP/1.1 200 OK

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.runQuery = void 0;
+exports.runQuery = runQuery;
 function runQuery(authInfo, query) {
     return __awaiter(this, void 0, void 0, function* () {
         const output = [];
@@ -27,7 +27,6 @@ function runQuery(authInfo, query) {
         return output;
     });
 }
-exports.runQuery = runQuery;
 function fetchData(authInfo, query, offset) {
     return __awaiter(this, void 0, void 0, function* () {
         var _a, _b;

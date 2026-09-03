@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.encodeCsv = void 0;
+exports.encodeCsv = encodeCsv;
 function encodeCsv(input) {
     const headers = parseHeaders(input);
     let out = '';
@@ -10,7 +10,6 @@ function encodeCsv(input) {
     }
     return out;
 }
-exports.encodeCsv = encodeCsv;
 function parseHeaders(input) {
     const out = new Set();
     for (const row of input) {

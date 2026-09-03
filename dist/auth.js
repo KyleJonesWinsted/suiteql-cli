@@ -12,7 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.refreshAccessToken = exports.fetchAccessToken = exports.fetchAuthCode = void 0;
+exports.fetchAuthCode = fetchAuthCode;
+exports.fetchAccessToken = fetchAccessToken;
+exports.refreshAccessToken = refreshAccessToken;
 const child_process_1 = require("child_process");
 const local_server_1 = require("./local-server");
 const crypto_1 = __importDefault(require("crypto"));
@@ -55,7 +57,6 @@ function fetchAuthCode(accountId) {
         };
     });
 }
-exports.fetchAuthCode = fetchAuthCode;
 function fetchAccessToken(authParams) {
     return __awaiter(this, void 0, void 0, function* () {
         const baseUrl = new URL(`https://${authParams.accountId}.suitetalk.api.netsuite.com/services/rest/auth/oauth2/v1/token`);
@@ -92,7 +93,6 @@ function fetchAccessToken(authParams) {
         };
     });
 }
-exports.fetchAccessToken = fetchAccessToken;
 function refreshAccessToken(authInfo) {
     return __awaiter(this, void 0, void 0, function* () {
         const baseUrl = new URL(`https://${authInfo.accountId}.suitetalk.api.netsuite.com/services/rest/auth/oauth2/v1/token`);
@@ -127,7 +127,6 @@ function refreshAccessToken(authInfo) {
         };
     });
 }
-exports.refreshAccessToken = refreshAccessToken;
 function dateAddSeconds(date, seconds) {
     const out = new Date();
     out.setSeconds(date.getSeconds() + seconds);

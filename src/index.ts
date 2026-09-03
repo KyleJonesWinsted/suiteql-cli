@@ -1,4 +1,4 @@
-#! env node
+#!/usr/bin/env node
 
 import { OutputType, parseArguments } from "./arguments";
 import { fetchAccessToken, fetchAuthCode, refreshAccessToken } from "./auth";
